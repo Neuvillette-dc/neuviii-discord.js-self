@@ -1,4 +1,5 @@
 'use strict';
+const { Buffer } = require('node:buffer');
 /**
  * Generates a Base64-encoded JSON string for the `X-Context-Properties` header.
  * This header is used by Discord to provide additional context for interactions

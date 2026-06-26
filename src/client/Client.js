@@ -202,11 +202,11 @@ class Client extends BaseClient {
      */
     this.authenticator = authenticator;
 
-    this.authenticator.options = {
-      step: 30,
-      digits: 6,
-      algorithm: 'sha1',
-    };
+    if (this.authenticator && typeof this.authenticator === 'object') {
+      this.authenticator.options = { step: 30, digits: 6, algorithm: 'sha1' };
+    } else {
+      this.authenticator = { options: { step: 30, digits: 6, algorithm: 'sha1' } };
+    }
 
     if (this.options.messageSweepInterval > 0) {
       process.emitWarning(
@@ -855,7 +855,7 @@ class Client extends BaseClient {
    * Eval is disabled for security reasons. This method now throws to prevent arbitrary code execution.
    * @throws {Error} Always throws indicating eval is not supported.
    */
-  _eval(/* script */) {
+  _eval(/* Script */) {
     throw new Error('Eval is disabled for security reasons');
   }
 
