@@ -81,7 +81,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "globals": "^15.0.0",
+    "globals": "^17.7.0",
     "patch-package": "^8.0.0",
     "prettier": "^3.0.0",
     "tsd": "^0.32.0",
