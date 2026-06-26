@@ -170,3 +170,4 @@ exports.PurchasedFlags = require('./util/PurchasedFlags');
 exports.Poll = require('./structures/Poll').Poll;
 exports.PollAnswer = require('./structures/PollAnswer').PollAnswer;
 exports.Recorder = require('./client/voice/receiver/Recorder');
+
