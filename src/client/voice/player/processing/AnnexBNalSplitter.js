@@ -130,7 +130,7 @@ const H265Helpers = {
   },
 };
 
-const emptyBuffer = Buffer.allocUnsafe(0);
+const emptyBuffer = Buffer.alloc(0);
 const epbPrefix = Buffer.from([0x00, 0x00, 0x03]);
 const nalSuffix = Buffer.from([0x00, 0x00, 0x01]);
 
@@ -143,7 +143,7 @@ class AnnexBNalSplitter extends Transform {
   }
 
   rbsp(data) {
-    const newData = Buffer.allocUnsafe(data.length);
+    const newData = Buffer.alloc(data.length);
     let newLength = 0;
 
     // eslint-disable-next-line no-constant-condition
@@ -175,7 +175,7 @@ class AnnexBNalSplitter extends Transform {
     const unitType = this._nalFunctions.getUnitType(frame);
     if (this._nalFunctions.isAUD(unitType) && this._accessUnit.length > 0) {
       const sizeOfAccessUnit = this._accessUnit.reduce((acc, nalu) => acc + nalu.length + 4, 0);
-      const accessUnitBuf = Buffer.allocUnsafe(sizeOfAccessUnit);
+      const accessUnitBuf = Buffer.alloc(sizeOfAccessUnit);
 
       let offset = 0;
       this._accessUnit.forEach(nalu => {

@@ -96,7 +96,7 @@ class H265Dispatcher extends AnnexBDispatcher {
   }
 
   makeFragmentationUnitHeader(isFirstPacket, isLastPacket, naluHeader) {
-    const fuIndicatorHeader = Buffer.allocUnsafe(3);
+    const fuIndicatorHeader = Buffer.alloc(3);
     naluHeader.copy(fuIndicatorHeader);
     const nalType = H265Helpers.getUnitType(naluHeader);
 

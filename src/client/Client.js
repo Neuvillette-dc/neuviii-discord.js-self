@@ -851,8 +851,12 @@ class Client extends BaseClient {
    * @returns {*}
    * @private
    */
-  _eval(script) {
-    return eval(script);
+  /**
+   * Eval is disabled for security reasons. This method now throws to prevent arbitrary code execution.
+   * @throws {Error} Always throws indicating eval is not supported.
+   */
+  _eval(/* script */) {
+    throw new Error('Eval is disabled for security reasons');
   }
 
   /**

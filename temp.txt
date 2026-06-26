@@ -1,2 +1,1664 @@
- can you check discord.com.har and extract/get whatever cookies/headers/shi it uses when sending a message or doing other stuff, also grab what else it does and what does it obtain and etc, then add those to the new lib we made, so it always uses similar headers and stuff so its super close to discord client and also tell me what headers/json does it send
-make a remaining/work left/plan/findings/explanations md so another ai can continue on after you, also make it detailed and also leave instructions for the other ai to also follow and complete and then remove useless points such as already completed functions and what does it not need to check so the other ai can also save a few tokens and i save a few bucks
+# DeepSource Code Review Report: JavaScript
+
+**Repository:** Neuvillette-dc/neuviii-discord.js-self
+**Branch:** `main`
+**Commit:** 18022e9...18022e9
+**Run:** [https://app.deepsource.com/gh/Neuvillette-dc/neuviii-discord.js-self/run/05527119-6f09-4b1b-bab3-2980f79b6e8d/](https://app.deepsource.com/gh/Neuvillette-dc/neuviii-discord.js-self/run/05527119-6f09-4b1b-bab3-2980f79b6e8d/)
+
+---
+
+## Summary
+- **JavaScript:** 399 issues
+
+---
+
+## Code Review Findings
+**Status:** Failure
+**Findings:** 399 new issues
+
+1. **Expected 'this' to be used by class method 'handle'** (`JS-0105`)
+   **File:** `src/client/actions/Action.js`
+   **Line:** 22
+   ```javascript
+   this.client = client;
+     }
+   
+     handle(data) {
+       return data;
+     }
+   ```
+   **Category:** Anti-pattern
+   **Severity:** minor
+
+2. **Variable 'auditLogEntry' should be initialized on declaration** (`JS-0119`)
+   **File:** `src/client/actions/GuildAuditLogEntryCreate.js`
+   **Line:** 11
+   ```javascript
+   handle(data) {
+       const client = this.client;
+       const guild = client.guilds.cache.get(data.guild_id);
+       let auditLogEntry;
+   
+       if (guild) {
+         auditLogEntry = new GuildAuditLogsEntry(guild, data);
+   ```
+   **Category:** Anti-pattern
+   **Severity:** minor
+
+3. **Variable 'role' should be initialized on declaration** (`JS-0119`)
+   **File:** `src/client/actions/GuildRoleCreate.js`
+   **Line:** 10
+   ```javascript
+   handle(data) {
+       const client = this.client;
+       const guild = client.guilds.cache.get(data.guild_id);
+       let role;
+       if (guild) {
+         const already = guild.roles.cache.has(data.role.id);
+         role = guild.roles._add(data.role);
+   ```
+   **Category:** Anti-pattern
+   **Severity:** minor
+
+4. **Variable 'role' should be initialized on declaration** (`JS-0119`)
+   **File:** `src/client/actions/GuildRoleDelete.js`
+   **Line:** 11
+   ```javascript
+   handle(data) {
+       const client = this.client;
+       const guild = client.guilds.cache.get(data.guild_id);
+       let role;
+   
+       if (guild) {
+         role = guild.roles.cache.get(data.role_id);
+   ```
+   **Category:** Anti-pattern
+   **Severity:** minor
+
+5. **Variable 'message' should be initialized on declaration** (`JS-0119`)
+   **File:** `src/client/actions/MessageDelete.js`
+   **Line:** 11
+   ```javascript
+   handle(data) {
+       const client = this.client;
+       const channel = this.getChannel({ id: data.channel_id, ...('guild_id' in data && { guild_id: data.guild_id }) });
+       let message;
+       if (channel) {
+         if (!channel.isText()) return {};
+   ```
+   **Category:** Anti-pattern
+   **Severity:** minor
+
+6. **Unexpected empty arrow function** (`JS-0057`)
+   **File:** `src/client/Client.js`
+   **Line:** 684
+   ```javascript
+   const getForm = await this.api
+             .guilds(i.guild?.id)
+             ['member-verification'].get({ query: { with_guild: false, invite_code: this.code } })
+             .catch(() => {});
+           if (getForm && getForm.form_fields[0]) {
+             const form = Object.assign(getForm.form_fields[0], { response: true });
+             await this.api
+   ```
+   **Category:** Anti-pattern
+   **Severity:** minor
+
+7. **'data' is already declared in the upper scope on line 831 column 46** (`JS-0123`)
+   **File:** `src/client/Client.js`
+   **Line:** 835
+   ```javascript
+   const results = new Collection();
+         for (const o of data) {
+           const application = new Application(this, o.application);
+           const data = {
+             application,
+             authorizedApplicationId: o.id,
+             scopes: o.scopes,
+   ```
+   **Category:** Bug risk
+   **Severity:** minor
+
+8. **`_validateOptions` has a cyclomatic complexity of 30 with "very-high" risk** (`JS-R1005`)
+   **File:** `src/client/Client.js`
+   **Line:** 863
+   ```javascript
+   * @param {ClientOptions} [options=this.options] Options to validate
+      * @private
+      */
+     _validateOptions(options = this.options) {
+       if (typeof options.makeCache !== 'function') {
+         throw new TypeError('CLIENT_INVALID_OPTION', 'makeCache', 'a function');
+       }
+   ```
+   **Category:** Anti-pattern
+   **Severity:** minor
+
+9. **Expected 'this' to be used by class method 'sleep'** (`JS-0105`)
+   **File:** `src/client/Client.js`
+   **Line:** 585
+   ```javascript
+   * function will wait before resolving the promise and continuing execution.
+      * @returns {void} The `sleep` function is returning a Promise.
+      */
+     sleep(timeout) {
+       return new Promise(r => setTimeout(r, timeout));
+     }
+   ```
+   **Category:** Anti-pattern
+   **Severity:** minor
+
+10. **Prefer using an optional chain expression instead, as it's more concise and easier to read** (`JS-W1044`)
+    **File:** `src/client/Client.js`
+    **Line:** 685
+    ```javascript
+    .guilds(i.guild?.id)
+              ['member-verification'].get({ query: { with_guild: false, invite_code: this.code } })
+              .catch(() => {});
+            if (getForm && getForm.form_fields[0]) {
+              const form = Object.assign(getForm.form_fields[0], { response: true });
+              await this.api
+                .guilds(i.guild?.id)
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+11. **Expected 'this' to be used by class method '_eval'** (`JS-0105`)
+    **File:** `src/client/Client.js`
+    **Line:** 854
+    ```javascript
+    * @returns {*}
+       * @private
+       */
+      _eval(script) {
+        return eval(script);
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+12. **Unexpected newline between object and [ of property access** (`JS-0024`)
+    **File:** `src/client/Client.js`
+    **Line:** 683
+    ```javascript
+    }
+            const getForm = await this.api
+              .guilds(i.guild?.id)
+              ['member-verification'].get({ query: { with_guild: false, invite_code: this.code } })
+              .catch(() => {});
+            if (getForm && getForm.form_fields[0]) {
+              const form = Object.assign(getForm.form_fields[0], { response: true });
+    ```
+    **Category:** Bug risk
+    **Severity:** major
+
+13. **eval can be harmful** (`JS-0060`)
+    **File:** `src/client/Client.js`
+    **Line:** 855
+    ```javascript
+    * @private
+       */
+      _eval(script) {
+        return eval(script);
+      }
+    
+      /**
+    ```
+    **Category:** Security
+    **Severity:** major
+
+14. **use `Boolean(connection)` instead** (`JS-0066`)
+    **File:** `src/client/voice/ClientVoiceManager.js`
+    **Line:** 71
+    ```javascript
+    }
+        // Main lib
+        const connection = this.connection;
+        this.client.emit('debug', `[VOICE] connection? ${!!connection}, ${guild_id} ${session_id} ${channel_id}`);
+        if (!connection) return;
+        if (!channel_id) {
+          connection._disconnect();
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+15. **'accessUnit' is never reassigned. Use 'const' instead** (`JS-0242`)
+    **File:** `src/client/voice/dispatcher/AnnexBDispatcher.js`
+    **Line:** 32
+    ```javascript
+    }
+    
+      _codecCallback(frame) {
+        let accessUnit = frame;
+        let offset = 0;
+    
+        // Extract NALUs from the access unit
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+16. **Default parameters should be last** (`JS-0106`)
+    **File:** `src/client/voice/dispatcher/AnnexBDispatcher.js`
+    **Line:** 26
+    ```javascript
+    const { H264Helpers, H265Helpers } = require('../player/processing/AnnexBNalSplitter');
+    
+    class AnnexBDispatcher extends VideoDispatcher {
+      constructor(player, highWaterMark = 12, streams, fps, nalFunctions, payloadType) {
+        super(player, highWaterMark, streams, fps, payloadType);
+        this._nalFunctions = nalFunctions;
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+17. **Expected 'this' to be used by class method 'makeFragmentationUnitHeader'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/AnnexBDispatcher.js`
+    **Line:** 73
+    ```javascript
+    super(player, highWaterMark, streams, fps, H264Helpers, Util.getPayloadType('H264'));
+      }
+    
+      makeFragmentationUnitHeader(isFirstPacket, isLastPacket, naluHeader) {
+        const nal0 = naluHeader[0];
+        const fuPayloadHeader = Buffer.alloc(2);
+        const nalType = H264Helpers.getUnitType(naluHeader);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+18. **Default parameters should be last** (`JS-0106`)
+    **File:** `src/client/voice/dispatcher/AnnexBDispatcher.js`
+    **Line:** 94
+    ```javascript
+    }
+    
+    class H265Dispatcher extends AnnexBDispatcher {
+      constructor(player, highWaterMark = 12, streams, fps) {
+        super(player, highWaterMark, streams, fps, H265Helpers, Util.getPayloadType('H265'));
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+19. **Expected 'this' to be used by class method 'makeFragmentationUnitHeader'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/AnnexBDispatcher.js`
+    **Line:** 98
+    ```javascript
+    super(player, highWaterMark, streams, fps, H265Helpers, Util.getPayloadType('H265'));
+      }
+    
+      makeFragmentationUnitHeader(isFirstPacket, isLastPacket, naluHeader) {
+        const fuIndicatorHeader = Buffer.allocUnsafe(3);
+        naluHeader.copy(fuIndicatorHeader);
+        const nalType = H265Helpers.getUnitType(naluHeader);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+20. **Default parameters should be last** (`JS-0106`)
+    **File:** `src/client/voice/dispatcher/AnnexBDispatcher.js`
+    **Line:** 69
+    ```javascript
+    }
+    
+    class H264Dispatcher extends AnnexBDispatcher {
+      constructor(player, highWaterMark = 12, streams, fps) {
+        super(player, highWaterMark, streams, fps, H264Helpers, Util.getPayloadType('H264'));
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+21. **Buffer.allocUnsafe is deprecated and should not be used** (`JS-D025`)
+    **File:** `src/client/voice/dispatcher/AnnexBDispatcher.js`
+    **Line:** 99
+    ```javascript
+    }
+    
+      makeFragmentationUnitHeader(isFirstPacket, isLastPacket, naluHeader) {
+        const fuIndicatorHeader = Buffer.allocUnsafe(3);
+        naluHeader.copy(fuIndicatorHeader);
+        const nalType = H265Helpers.getUnitType(naluHeader);
+    ```
+    **Category:** Security
+    **Severity:** critical
+
+22. **Expected 'this' to be used by class method 'setVolumeLogarithmic'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/AudioDispatcher.js`
+    **Line:** 140
+    ```javascript
+    get volumeDecibels() {}
+      get volumeLogarithmic() {}
+      setVolumeDecibels() {}
+      setVolumeLogarithmic() {}
+    }
+    
+    VolumeInterface.applyToClass(AudioDispatcher);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+23. **Default parameters should be last** (`JS-0106`)
+    **File:** `src/client/voice/dispatcher/AudioDispatcher.js`
+    **Line:** 28
+    ```javascript
+    * @extends {BaseDispatcher}
+     */
+    class AudioDispatcher extends BaseDispatcher {
+      constructor(player, { seek = 0, volume = 1, fec, plp, bitrate = 96, highWaterMark = 12 } = {}, streams) {
+        const streamOptions = { seek, volume, fec, plp, bitrate, highWaterMark };
+        super(player, highWaterMark, Util.getPayloadType('opus'), false, streams);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+24. **Prefer using an optional chain expression instead, as it's more concise and easier to read** (`JS-W1044`)
+    **File:** `src/client/voice/dispatcher/AudioDispatcher.js`
+    **Line:** 103
+    ```javascript
+    * @readonly
+       */
+      get bitrateEditable() {
+        return this.streams.opus && this.streams.opus.setBitrate;
+      }
+    
+      // Volume
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+25. **Expected 'this' to be used by class getter 'TIMESTAMP_INC'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/AudioDispatcher.js`
+    **Line:** 42
+    ```javascript
+    if (typeof plp !== 'undefined') this.setPLP(plp);
+      }
+    
+      get TIMESTAMP_INC() {
+        return 480 * CHANNELS;
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+26. **Expected 'this' to be used by class getter 'volumeLogarithmic'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/AudioDispatcher.js`
+    **Line:** 138
+    ```javascript
+    // Volume stubs for docs
+      /* eslint-disable no-empty-function*/
+      get volumeDecibels() {}
+      get volumeLogarithmic() {}
+      setVolumeDecibels() {}
+      setVolumeLogarithmic() {}
+    }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+27. **Expected 'this' to be used by class method 'getTypeDispatcher'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/AudioDispatcher.js`
+    **Line:** 54
+    ```javascript
+    * Get the type of the dispatcher
+       * @returns {'audio'}
+       */
+      getTypeDispatcher() {
+        return 'audio';
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+28. **Expected 'this' to be used by class getter 'volumeDecibels'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/AudioDispatcher.js`
+    **Line:** 137
+    ```javascript
+    // Volume stubs for docs
+      /* eslint-disable no-empty-function*/
+      get volumeDecibels() {}
+      get volumeLogarithmic() {}
+      setVolumeDecibels() {}
+      setVolumeLogarithmic() {}
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+29. **Expected 'this' to be used by class method 'setVolumeDecibels'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/AudioDispatcher.js`
+    **Line:** 139
+    ```javascript
+    /* eslint-disable no-empty-function*/
+      get volumeDecibels() {}
+      get volumeLogarithmic() {}
+      setVolumeDecibels() {}
+      setVolumeLogarithmic() {}
+    }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+30. **Expected 'this' to be used by class getter 'FRAME_LENGTH'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/AudioDispatcher.js`
+    **Line:** 46
+    ```javascript
+    return 480 * CHANNELS;
+      }
+    
+      get FRAME_LENGTH() {
+        return 20;
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+31. **Default parameters should be last** (`JS-0106`)
+    **File:** `src/client/voice/dispatcher/BaseDispatcher.js`
+    **Line:** 23
+    ```javascript
+    * @extends {Writable}
+     */
+    class BaseDispatcher extends Writable {
+      constructor(player, highWaterMark = 12, payloadType, extensionEnabled, streams = {}) {
+        super({
+          highWaterMark,
+        });
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+32. **Expected 'this' to be used by class method 'createHeaderExtension'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/BaseDispatcher.js`
+    **Line:** 251
+    ```javascript
+    * https://www.rfc-editor.org/rfc/rfc5285#section-4.2
+       * @returns {Buffer} <Buffer be de 00 01>
+       */
+      createHeaderExtension() {
+        /**
+          *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+          +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+33. **'timeout' is never reassigned. Use 'const' instead** (`JS-0242`)
+    **File:** `src/client/voice/dispatcher/BaseDispatcher.js`
+    **Line:** 113
+    ```javascript
+    clearTimeout(timeout);
+          };
+          this._syncDispatcher.once('start', cb);
+          let timeout = setTimeout(() => {
+            this.removeListener('start', cb);
+            this.resume();
+          }, 10_000).unref();
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+34. **Expected 'this' to be used by class method 'getTypeDispatcher'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/BaseDispatcher.js`
+    **Line:** 79
+    ```javascript
+    });
+      }
+    
+      getTypeDispatcher() {
+        return 'base';
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+35. **Variable 'encrypted' should be initialized on declaration** (`JS-0119`)
+    **File:** `src/client/voice/dispatcher/BaseDispatcher.js`
+    **Line:** 320
+    ```javascript
+    // 4 extra bytes of padding on the end of the encrypted packet
+        const noncePadding = this._nonceBuffer.slice(0, 4);
+    
+        let encrypted;
+    
+        switch (mode) {
+          case 'aead_aes256_gcm_rtpsize': {
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+36. **Expected 'this' to be used by class method 'createPayloadExtension'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/BaseDispatcher.js`
+    **Line:** 273
+    ```javascript
+    * @see https://webrtc.googlesource.com/src/+/refs/heads/main/docs/native-code/rtp-hdrext/playout-delay
+       * @returns {Buffer} playout-delay extension <Buffer 51 00 00 00>
+       */
+      createPayloadExtension() {
+        const extensionsData = [];
+        for (let ext of extensions) {
+          /**
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+37. **'ext' is never reassigned. Use 'const' instead** (`JS-0242`)
+    **File:** `src/client/voice/dispatcher/BaseDispatcher.js`
+    **Line:** 275
+    ```javascript
+    */
+      createPayloadExtension() {
+        const extensionsData = [];
+        for (let ext of extensions) {
+          /**
+           * EXTENSION DATA - each extension payload is 32 bits
+           */
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+38. **'timeout' was used before it was defined** (`JS-0129`)
+    **File:** `src/client/voice/dispatcher/BaseDispatcher.js`
+    **Line:** 110
+    ```javascript
+    this.pause();
+          const cb = () => {
+            this.resume();
+            clearTimeout(timeout);
+          };
+          this._syncDispatcher.once('start', cb);
+          let timeout = setTimeout(() => {
+    ```
+    **Category:** Bug risk
+    **Severity:** major
+
+39. **Expected 'this' to be used by class method '_codecCallback'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/VideoDispatcher.js`
+    **Line:** 63
+    ```javascript
+    this.fps = value;
+      }
+    
+      _codecCallback() {
+        throw new Error('The _codecCallback method must be implemented');
+      }
+    }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+40. **Default parameters should be last** (`JS-0106`)
+    **File:** `src/client/voice/dispatcher/VideoDispatcher.js`
+    **Line:** 17
+    ```javascript
+    * @extends {BaseDispatcher}
+     */
+    class VideoDispatcher extends BaseDispatcher {
+      constructor(player, highWaterMark = 12, streams, fps, payloadType) {
+        super(player, highWaterMark, payloadType, true, streams);
+        /**
+         * Video FPS
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+41. **Expected 'this' to be used by class method 'getTypeDispatcher'** (`JS-0105`)
+    **File:** `src/client/voice/dispatcher/VideoDispatcher.js`
+    **Line:** 40
+    ```javascript
+    * Get the type of the dispatcher
+       * @returns {'video'}
+       */
+      getTypeDispatcher() {
+        return 'video';
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+42. **Default parameters should be last** (`JS-0106`)
+    **File:** `src/client/voice/dispatcher/VPxDispatcher.js`
+    **Line:** 25
+    ```javascript
+    const Util = require('../../../util/Util');
+    
+    class VP8Dispatcher extends VideoDispatcher {
+      constructor(player, highWaterMark = 12, streams, fps) {
+        super(player, highWaterMark, streams, fps, Util.getPayloadType('VP8'));
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+43. **Template string can be replaced with regular string literal** (`JS-R1004`)
+    **File:** `src/client/voice/networking/VoiceUDPClient.js`
+    **Line:** 155
+    ```javascript
+    blankMessage.writeUInt32BE(this.voiceConnection.authentication.ssrc, 4);
+        this.emit('debug', `Sending IP discovery packet: [${[...blankMessage]}]`);
+        await this.send(blankMessage);
+        this.emit('debug', `Successfully sent IP discovery packet`);
+      }
+    }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+44. **Template string can be replaced with regular string literal** (`JS-R1004`)
+    **File:** `src/client/voice/networking/VoiceUDPClient.js`
+    **Line:** 54
+    ```javascript
+    }
+    
+      shutdown() {
+        this.emit('debug', `[UDP] shutdown requested`);
+        if (this.socket) {
+          this.socket.removeAllListeners('message');
+          try {
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+45. **Template string can be replaced with regular string literal** (`JS-R1004`)
+    **File:** `src/client/voice/networking/VoiceUDPClient.js`
+    **Line:** 104
+    ```javascript
+    socket.on('close', () => {
+          this.emit('debug', '[UDP] socket closed');
+        });
+        this.emit('debug', `[UDP] created socket`);
+        socket.once('message', message => {
+          this.emit('debug', `[UDP] message: [${[...message]}] (${message})`);
+          if (message.readUInt16BE(0) !== 2) {
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+46. **Prefer using an optional chain expression instead, as it's more concise and easier to read** (`JS-W1044`)
+    **File:** `src/client/voice/networking/VoiceWebSocket.js`
+    **Line:** 203
+    ```javascript
+    });
+            break;
+          case VoiceOpcodes.CLIENT_DISCONNECT:
+            const streamInfo = this.connection.receiver && this.connection.receiver.packets.streams.get(packet.d.user_id);
+            if (streamInfo) {
+              this.connection.receiver.packets.streams.delete(packet.d.user_id);
+              streamInfo.stream.push(null);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+47. **Template string can be replaced with regular string literal** (`JS-R1004`)
+    **File:** `src/client/voice/networking/VoiceWebSocket.js`
+    **Line:** 54
+    ```javascript
+    * Resets the current WebSocket.
+       */
+      reset() {
+        this.emit('debug', `[WS] reset requested`);
+        if (this.ws) {
+          if (this.ws.readyState !== WebSocket.CLOSED) this.ws.close();
+          this.ws = null;
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+48. **Template string can be replaced with regular string literal** (`JS-R1004`)
+    **File:** `src/client/voice/networking/VoiceWebSocket.js`
+    **Line:** 66
+    ```javascript
+    * Starts connecting to the Voice WebSocket Server.
+       */
+      connect() {
+        this.emit('debug', `[WS] connect requested`);
+        if (this.dead) return;
+        if (this.ws) this.reset();
+        if (this.attempts >= 5) {
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+49. **Found `async` function without any `await` expressions** (`JS-0116`)
+    **File:** `src/client/voice/networking/VoiceWebSocket.js`
+    **Line:** 109-112
+    ```javascript
+    * @param {Object} packet The packet to send
+       * @returns {Promise<string>}
+       */
+      async sendPacket(packet) {
+        packet = JSON.stringify(packet);
+        return this.send(packet);
+      }
+    
+      /**
+       * Called whenever the WebSocket opens.
+    ```
+    **Category:** Bug risk
+    **Severity:** minor
+
+50. **Template string can be replaced with regular string literal** (`JS-R1004`)
+    **File:** `src/client/voice/networking/VoiceWebSocket.js`
+    **Line:** 45
+    ```javascript
+    }
+    
+      shutdown() {
+        this.emit('debug', `[WS] shutdown requested`);
+        this.dead = true;
+        this.reset();
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+51. **use `Number(packet.d.audio_ssrc)` instead** (`JS-0066`)
+    **File:** `src/client/voice/networking/VoiceWebSocket.js`
+    **Line:** 196
+    ```javascript
+    this.emit('sessionDescription', packet.d);
+            break;
+          case VoiceOpcodes.CLIENT_CONNECT:
+            this.connection.ssrcMap.set(+packet.d.audio_ssrc, {
+              userId: packet.d.user_id,
+              speaking: 0,
+              hasVideo: Boolean(packet.d.video_ssrc),
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+52. **Variable 'videoStream' should be initialized on declaration** (`JS-0119`)
+    **File:** `src/client/voice/player/MediaPlayer.js`
+    **Line:** 267
+    ```javascript
+    // eslint-disable-next-line no-unused-vars
+      playAnnexBVideo(stream, options, streams, type) {
+        this.destroyVideoDispatcher();
+        let videoStream;
+        if (type === 'H264') {
+          videoStream = new H264NalSplitter();
+        } else if (type === 'H265') {
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+53. **Expected 'this' to be used by class method 'removeEpbs'** (`JS-0105`)
+    **File:** `src/client/voice/player/processing/AnnexBNalSplitter.js`
+    **Line:** 232
+    ```javascript
+    super(H265Helpers);
+      }
+    
+      removeEpbs(frame) {
+        return frame; // No specific processing for H265
+      }
+    }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+54. **Expected 'this' to be used by class method 'findNalStart'** (`JS-0105`)
+    **File:** `src/client/voice/player/processing/AnnexBNalSplitter.js`
+    **Line:** 166
+    ```javascript
+    return newData.subarray(0, newLength);
+      }
+    
+      findNalStart(buf) {
+        const pos = buf.indexOf(nalSuffix);
+        if (pos === -1) return null;
+        return pos > 0 && buf[pos - 1] === 0 ? { index: pos - 1, length: 4 } : { index: pos, length: 3 };
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+55. **Expected 'this' to be used by class method 'rbsp'** (`JS-0105`)
+    **File:** `src/client/voice/player/processing/AnnexBNalSplitter.js`
+    **Line:** 145
+    ```javascript
+    this._nalFunctions = nalFunctions;
+      }
+    
+      rbsp(data) {
+        const newData = Buffer.allocUnsafe(data.length);
+        let newLength = 0;
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+56. **Buffer.allocUnsafe is deprecated and should not be used** (`JS-D025`)
+    **File:** `src/client/voice/player/processing/AnnexBNalSplitter.js`
+    **Line:** 133
+    ```javascript
+    },
+    };
+    
+    const emptyBuffer = Buffer.allocUnsafe(0);
+    const epbPrefix = Buffer.from([0x00, 0x00, 0x03]);
+    const nalSuffix = Buffer.from([0x00, 0x00, 0x01]);
+    ```
+    **Category:** Security
+    **Severity:** critical
+
+57. **Buffer.allocUnsafe is deprecated and should not be used** (`JS-D025`)
+    **File:** `src/client/voice/player/processing/AnnexBNalSplitter.js`
+    **Line:** 178
+    ```javascript
+    const unitType = this._nalFunctions.getUnitType(frame);
+        if (this._nalFunctions.isAUD(unitType) && this._accessUnit.length > 0) {
+          const sizeOfAccessUnit = this._accessUnit.reduce((acc, nalu) => acc + nalu.length + 4, 0);
+          const accessUnitBuf = Buffer.allocUnsafe(sizeOfAccessUnit);
+    
+          let offset = 0;
+          this._accessUnit.forEach(nalu => {
+    ```
+    **Category:** Security
+    **Severity:** critical
+
+58. **Buffer.allocUnsafe is deprecated and should not be used** (`JS-D025`)
+    **File:** `src/client/voice/player/processing/AnnexBNalSplitter.js`
+    **Line:** 146
+    ```javascript
+    }
+    
+      rbsp(data) {
+        const newData = Buffer.allocUnsafe(data.length);
+        let newLength = 0;
+    
+        // eslint-disable-next-line no-constant-condition
+    ```
+    **Category:** Security
+    **Severity:** critical
+
+59. **Expected property shorthand** (`JS-0240`)
+    **File:** `src/client/voice/player/processing/IvfSplitter.js`
+    **Line:** 58
+    ```javascript
+    if (this.retFullFrame) return this.push(frame.subarray(0, 12 + size));
+    
+        const out = {
+          size: size,
+          timestamp: frame.readBigUInt64LE(4),
+          data: frame.subarray(12, 12 + size),
+        };
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+60. **Prefer using an optional chain expression instead, as it's more concise and easier to read** (`JS-W1044`)
+    **File:** `src/client/voice/player/processing/IvfSplitter.js`
+    **Line:** 31
+    ```javascript
+    this.header = null;
+        this.buf = null;
+        this.retFullFrame = options && options.fullframe ? options.fullframe : false;
+      }
+    
+      _parseHeader(header) {
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+61. **Expected 'this' to be used by class method '_getFrameSize'** (`JS-0105`)
+    **File:** `src/client/voice/player/processing/IvfSplitter.js`
+    **Line:** 48
+    ```javascript
+    };
+      }
+    
+      _getFrameSize(buf) {
+        return buf.readUIntLE(0, 4);
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+62. **Variable 'packet' should be initialized on declaration** (`JS-0119`)
+    **File:** `src/client/voice/receiver/PacketHandler.js`
+    **Line:** 233
+    ```javascript
+    push(buffer) {
+        const ssrc = buffer.readUInt32BE(8);
+        let userStat, packet;
+        if (this.connection.ssrcMap.has(ssrc)) {
+          userStat = this.connection.ssrcMap.get(ssrc); // Audio_ssrc
+          packet = this.parseBuffer(buffer);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+63. **Variable 'packet' should be initialized on declaration** (`JS-0119`)
+    **File:** `src/client/voice/receiver/PacketHandler.js`
+    **Line:** 97
+    ```javascript
+    buffer.length - UNPADDED_NONCE_LENGTH,
+        );
+    
+        let packet;
+        switch (mode) {
+          case 'aead_aes256_gcm_rtpsize': {
+            const decipheriv = crypto.createDecipheriv('aes-256-gcm', secret_key, nonce);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+64. **Variable 'userStat' should be initialized on declaration** (`JS-0119`)
+    **File:** `src/client/voice/receiver/PacketHandler.js`
+    **Line:** 233
+    ```javascript
+    push(buffer) {
+        const ssrc = buffer.readUInt32BE(8);
+        let userStat, packet;
+        if (this.connection.ssrcMap.has(ssrc)) {
+          userStat = this.connection.ssrcMap.get(ssrc); // Audio_ssrc
+          packet = this.parseBuffer(buffer);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+65. **Expected 'this' to be used by class method '_read'** (`JS-0105`)
+    **File:** `src/client/voice/receiver/PacketHandler.js`
+    **Line:** 23
+    ```javascript
+    const AUTH_TAG_LENGTH = 16;
+    
+    class Readable extends require('stream').Readable {
+      _read() {} // eslint-disable-line no-empty-function
+    }
+    
+    class PacketHandler extends EventEmitter {
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+66. **Expected property shorthand** (`JS-0240`)
+    **File:** `src/client/voice/receiver/PacketHandler.js`
+    **Line:** 166
+    ```javascript
+    if (userStat.speaking === 0) {
+            userStat.speaking = Speaking.FLAGS.SPEAKING;
+          }
+          this.connection.onSpeaking({ user_id: userStat.userId, ssrc: ssrc, speaking: userStat.speaking });
+          speakingTimeout = setTimeout(() => {
+            try {
+              this.connection.onSpeaking({ user_id: userStat.userId, ssrc: ssrc, speaking: 0 });
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+67. **Expected property shorthand** (`JS-0240`)
+    **File:** `src/client/voice/receiver/PacketHandler.js`
+    **Line:** 169
+    ```javascript
+    this.connection.onSpeaking({ user_id: userStat.userId, ssrc: ssrc, speaking: userStat.speaking });
+          speakingTimeout = setTimeout(() => {
+            try {
+              this.connection.onSpeaking({ user_id: userStat.userId, ssrc: ssrc, speaking: 0 });
+              clearTimeout(speakingTimeout);
+              this.speakingTimeouts.delete(ssrc);
+            } catch {
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+68. **Variable 'port' should be initialized on declaration** (`JS-0119`)
+    **File:** `src/client/voice/receiver/Recorder.js`
+    **Line:** 136
+    ```javascript
+    }
+        const message = payload.serialize();
+        // Get port from payloadType
+        let port;
+        if (payload.header.payloadType === Util.getPayloadType('opus')) {
+          port = this.portUdpOpus;
+        } else if (payload.header.payloadType === Util.getPayloadType('H264')) {
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+69. **'process' is never reassigned. Use 'const' instead** (`JS-0242`)
+    **File:** `src/client/voice/receiver/Recorder.js`
+    **Line:** 153
+    ```javascript
+    const ffmpegPid = this.stream.pid; // But it is ppid ;-;
+        const args = this.stream.spawnargs.slice(1).join(' '); // Skip ffmpeg
+        find('name', 'ffmpeg', true).then(list => {
+          let process = list.find(o => o.pid === ffmpegPid || o.ppid === ffmpegPid || o.cmd.includes(args));
+          if (process) {
+            kill(process.pid);
+            this.receiver?.videoStreams?.delete(this.userId);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+70. **Variable 'port' should be initialized on declaration** (`JS-0119`)
+    **File:** `src/client/voice/util/Function.js`
+    **Line:** 69
+    ```javascript
+    * @throws {Error} If no port is found within the range.
+     */
+    async function findPort(min, max, protocol = 'udp4', interfaceAddresses) {
+      let port;
+    
+      for (let i = min; i <= max; i++) {
+        const socket = dgram.createSocket(protocol);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+71. **Default parameters should be last** (`JS-0106`)
+    **File:** `src/client/voice/util/Function.js`
+    **Line:** 28
+    ```javascript
+    * @param {InterfaceAddresses} [interfaceAddresses] - The interface addresses mapping.
+     * @returns {Promise<number>} The assigned random port.
+     */
+    async function randomPort(protocol = 'udp4', interfaceAddresses) {
+      const socket = dgram.createSocket(protocol);
+    
+      setImmediate(() =>
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+72. **Default parameters should be last** (`JS-0106`)
+    **File:** `src/client/voice/util/Function.js`
+    **Line:** 68
+    ```javascript
+    * @returns {Promise<number>} The available port within range.
+     * @throws {Error} If no port is found within the range.
+     */
+    async function findPort(min, max, protocol = 'udp4', interfaceAddresses) {
+      let port;
+    
+      for (let i = min; i <= max; i++) {
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+73. **Default parameters should be last** (`JS-0106`)
+    **File:** `src/client/voice/util/Function.js`
+    **Line:** 55
+    ```javascript
+    * @param {InterfaceAddresses} [interfaceAddresses] - The interface addresses mapping.
+     * @returns {Promise<number[]>} An array of assigned random ports.
+     */
+    async function randomPorts(num, protocol = 'udp4', interfaceAddresses) {
+      return Promise.all(Array.from({ length: num }).map(() => randomPort(protocol, interfaceAddresses)));
+    }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+74. **Found `async` function without any `await` expressions** (`JS-0116`)
+    **File:** `src/client/voice/util/Function.js`
+    **Line:** 55-57
+    ```javascript
+    * @param {InterfaceAddresses} [interfaceAddresses] - The interface addresses mapping.
+     * @returns {Promise<number[]>} An array of assigned random ports.
+     */
+    async function randomPorts(num, protocol = 'udp4', interfaceAddresses) {
+      return Promise.all(Array.from({ length: num }).map(() => randomPort(protocol, interfaceAddresses)));
+    }
+    
+    /**
+     * Find an available port within a given range.
+    ```
+    **Category:** Bug risk
+    **Severity:** minor
+
+75. **'err' is defined but never used** (`JS-0128`)
+    **File:** `src/client/voice/util/Socket.js`
+    **Line:** 42
+    ```javascript
+    try {
+          fs.statSync(this.socketPath);
+          fs.unlinkSync(this.socketPath);
+        } catch (err) {
+          // Null
+        }
+    ```
+    **Category:** Bug risk
+    **Severity:** major
+
+76. **Expected 'this' to be used by class getter 'volumeEditable'** (`JS-0105`)
+    **File:** `src/client/voice/util/VolumeInterface.js`
+    **Line:** 21
+    ```javascript
+    * @type {boolean}
+       * @readonly
+       */
+      get volumeEditable() {
+        return true;
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+77. **Expected 'this' to be used by class method 'playVideo'** (`JS-0105`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 669
+    ```javascript
+    }
+    
+      playAudio() {} // eslint-disable-line no-empty-function
+      playVideo() {} // eslint-disable-line no-empty-function
+    
+      /**
+       * Create new connection to screenshare stream
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+78. **Expected 'this' to be used by class getter 'streamConnection'** (`JS-0105`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 1161
+    ```javascript
+    return Promise.resolve(this);
+      }
+    
+      get streamConnection() {
+        return null;
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+79. **use `Number(audio_ssrc)` instead** (`JS-0066`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 605
+    ```javascript
+    }
+    
+      onStartStreaming({ video_ssrc, user_id, audio_ssrc }) {
+        this.ssrcMap.set(+audio_ssrc, {
+          ...(this.ssrcMap.get(+audio_ssrc) || {}),
+          userId: user_id,
+          hasVideo: Boolean(video_ssrc), // Maybe ?
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+80. **Expected 'this' to be used by class method 'createStreamConnection'** (`JS-0105`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 1153
+    ```javascript
+    this.region = null;
+      }
+    
+      createStreamConnection() {
+        throw new Error('STREAM_CONNECTION_READONLY');
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+81. **Expected 'this' to be used by class getter 'streamWatchConnection'** (`JS-0105`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 1169
+    ```javascript
+    // Why ?
+      }
+    
+      get streamWatchConnection() {
+        return new Collection();
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+82. **Expected 'this' to be used by class method 'joinStreamConnection'** (`JS-0105`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 966
+    ```javascript
+    return Promise.resolve(this);
+      }
+    
+      joinStreamConnection() {
+        throw new Error('STREAM_CANNOT_JOIN');
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+83. **Expected 'this' to be used by class getter 'streamWatchConnection'** (`JS-0105`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 978
+    ```javascript
+    // Why ?
+      }
+    
+      get streamWatchConnection() {
+        return new Collection();
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+84. **Expected a default case** (`JS-0047`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 812-830
+    ```javascript
+    this.streamConnection
+                ) {
+                  // Current user stream
+                  switch (event) {
+                    case 'STREAM_CREATE': {
+                      this.streamConnection.setSessionId(this.authentication.sessionId);
+                      this.streamConnection.serverId = data.rtc_server_id;
+                      break;
+                    }
+                    case 'STREAM_SERVER_UPDATE': {
+                      this.streamConnection.setTokenAndEndpoint(data.token, data.endpoint);
+                      break;
+                    }
+                    case 'STREAM_DELETE': {
+                      this.streamConnection.disconnect();
+                      break;
+                    }
+                    case 'STREAM_UPDATE': {
+                      this.streamConnection.update(data);
+                      break;
+                    }
+                  }
+                }
+                if (this.streamWatchConnection.has(StreamKey.userId) && this.channel.id == StreamKey.channelId) {
+                  const streamConnection = this.streamWatchConnection.get(StreamKey.userId);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+85. **Expected 'this' to be used by class setter 'streamWatchConnection'** (`JS-0105`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 982
+    ```javascript
+    return new Collection();
+      }
+    
+      set streamWatchConnection(value) {
+        // Why ?
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+86. **Expected a default case** (`JS-0047`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 721-740
+    ```javascript
+    if (this.streamWatchConnection.has(StreamKey.userId) && this.channel.id == StreamKey.channelId) {
+                  const streamConnection = this.streamWatchConnection.get(StreamKey.userId);
+                  // Watch user stream
+                  switch (event) {
+                    case 'STREAM_CREATE': {
+                      streamConnection.setSessionId(this.authentication.sessionId);
+                      streamConnection.serverId = data.rtc_server_id;
+                      break;
+                    }
+                    case 'STREAM_SERVER_UPDATE': {
+                      streamConnection.setTokenAndEndpoint(data.token, data.endpoint);
+                      break;
+                    }
+                    case 'STREAM_DELETE': {
+                      streamConnection.disconnect();
+                      streamConnection.receiver.packets.destroyAllStream();
+                      break;
+                    }
+                    case 'STREAM_UPDATE': {
+                      streamConnection.update(data);
+                      break;
+                    }
+                  }
+                }
+              });
+            }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+87. **Expected 'this' to be used by class setter 'streamConnection'** (`JS-0105`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 1165
+    ```javascript
+    return null;
+      }
+    
+      set streamConnection(value) {
+        // Why ?
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+88. **Template string can be replaced with regular string literal** (`JS-R1004`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 526
+    ```javascript
+    * @private
+       */
+      connect() {
+        this.emit('debug', `Connect triggered`);
+        if (this.status !== VoiceStatus.RECONNECTING) {
+          if (this.sockets.ws) throw new Error('WS_CONNECTION_EXISTS');
+          if (this.sockets.udp) throw new Error('UDP_CONNECTION_EXISTS');
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+89. **use `Number(ssrc)` instead** (`JS-0066`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 597
+    ```javascript
+    }
+    
+      onStartSpeaking({ user_id, ssrc, speaking }) {
+        this.ssrcMap.set(+ssrc, {
+          ...(this.ssrcMap.get(+ssrc) || {}),
+          userId: user_id,
+          speaking: speaking,
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+90. **Expected 'this' to be used by class setter 'streamConnection'** (`JS-0105`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 974
+    ```javascript
+    return this;
+      }
+    
+      set streamConnection(value) {
+        // Why ?
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+91. **Expected 'this' to be used by class setter 'streamWatchConnection'** (`JS-0105`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 1173
+    ```javascript
+    return new Collection();
+      }
+    
+      set streamWatchConnection(value) {
+        // Why ?
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+92. **Expected property shorthand** (`JS-0240`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 600
+    ```javascript
+    this.ssrcMap.set(+ssrc, {
+          ...(this.ssrcMap.get(+ssrc) || {}),
+          userId: user_id,
+          speaking: speaking,
+        });
+      }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+93. **use `Number(audio_ssrc)` instead** (`JS-0066`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 606
+    ```javascript
+    onStartStreaming({ video_ssrc, user_id, audio_ssrc }) {
+        this.ssrcMap.set(+audio_ssrc, {
+          ...(this.ssrcMap.get(+audio_ssrc) || {}),
+          userId: user_id,
+          hasVideo: Boolean(video_ssrc), // Maybe ?
+        });
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+94. **Found `async` function without any `await` expressions** (`JS-0116`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 779-887
+    ```javascript
+    * @param {UserResolvable} user Discord user
+       * @returns {Promise<StreamConnectionReadonly>}
+       */
+      async joinStreamConnection(user) {
+        const userId = this.client.users.resolveId(user);
+        // Check if user is streaming
+        if (!userId) {
+          throw new Error('VOICE_USER_MISSING');
+        }
+        const voiceState = this.channel.guild?.voiceStates.cache.get(userId) || this.client.voiceStates.cache.get(userId);
+        if (!voiceState || !voiceState.streaming) {
+          throw new Error('VOICE_USER_NOT_STREAMING');
+        }
+        // eslint-disable-next-line consistent-return
+        return new Promise((resolve, reject) => {
+          if (this.streamWatchConnection.has(userId)) {
+            return resolve(this.streamWatchConnection.get(userId));
+          } else {
+            const connection = new StreamConnectionReadonly(this.voiceManager, this.channel, this, userId);
+            this.streamWatchConnection.set(userId, connection);
+            connection.setVideoCodec(this.videoCodec);
+            // Setup event...
+            if (!this.eventHook) {
+              this.eventHook = true; // Dont listen this event two times :/
+              this.channel.client.on('raw', packet => {
+                if (typeof packet !== 'object' || !packet.t || !packet.d || !packet.d?.stream_key) {
+                  return;
+                }
+                const { t: event, d: data } = packet;
+                const StreamKey = parseStreamKey(data.stream_key);
+                if (
+                  StreamKey.userId === this.channel.client.user.id &&
+                  this.channel.id == StreamKey.channelId &&
+                  this.streamConnection
+                ) {
+                  // Current user stream
+                  switch (event) {
+                    case 'STREAM_CREATE': {
+                      this.streamConnection.setSessionId(this.authentication.sessionId);
+                      this.streamConnection.serverId = data.rtc_server_id;
+                      break;
+                    }
+                    case 'STREAM_SERVER_UPDATE': {
+                      this.streamConnection.setTokenAndEndpoint(data.token, data.endpoint);
+                      break;
+                    }
+                    case 'STREAM_DELETE': {
+                      this.streamConnection.disconnect();
+                      break;
+                    }
+                    case 'STREAM_UPDATE': {
+                      this.streamConnection.update(data);
+                      break;
+                    }
+                  }
+                }
+                if (this.streamWatchConnection.has(StreamKey.userId) && this.channel.id == StreamKey.channelId) {
+                  const streamConnection = this.streamWatchConnection.get(StreamKey.userId);
+                  // Watch user stream
+                  switch (event) {
+                    case 'STREAM_CREATE': {
+                      streamConnection.setSessionId(this.authentication.sessionId);
+                      streamConnection.serverId = data.rtc_server_id;
+                      break;
+                    }
+                    case 'STREAM_SERVER_UPDATE': {
+                      streamConnection.setTokenAndEndpoint(data.token, data.endpoint);
+                      break;
+                    }
+                    case 'STREAM_DELETE': {
+                      streamConnection.disconnect();
+                      streamConnection.receiver.packets.destroyAllStream();
+                      break;
+                    }
+                    case 'STREAM_UPDATE': {
+                      streamConnection.update(data);
+                      break;
+                    }
+                  }
+                }
+              });
+            }
+            connection.sendSignalScreenshare();
+            connection.on('debug', msg =>
+              this.channel.client.emit(
+                'debug',
+                `[VOICE STREAM WATCH (${userId}>${this.channel.guild?.id || this.channel.id}:${
+                  connection.status
+                })]: ${msg}`,
+              ),
+            );
+            connection.once('failed', reason => {
+              this.streamWatchConnection.delete(userId);
+              reject(reason);
+            });
+            connection.on('error', reject);
+            connection.once('authenticated', () => {
+              connection.once('ready', () => {
+                resolve(connection);
+                connection.removeListener('error', reject);
+              });
+              connection.once('disconnect', () => {
+                this.streamWatchConnection.delete(userId);
+              });
+            });
+          }
+        });
+      }
+    
+      /**
+       * @event VoiceConnection#streamUpdate
+    ```
+    **Category:** Bug risk
+    **Severity:** minor
+
+95. **'mode' is never reassigned. Use 'const' instead** (`JS-0242`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 559
+    ```javascript
+    */
+      onReady(data) {
+        Object.assign(this.authentication, data);
+        for (let mode of data.modes) {
+          if (SUPPORTED_MODES.includes(mode)) {
+            this.authentication.mode = mode;
+            this.emit('debug', `Selecting the ${mode} mode`);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+96. **use `Number(ssrc)` instead** (`JS-0066`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 598
+    ```javascript
+    onStartSpeaking({ user_id, ssrc, speaking }) {
+        this.ssrcMap.set(+ssrc, {
+          ...(this.ssrcMap.get(+ssrc) || {}),
+          userId: user_id,
+          speaking: speaking,
+        });
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+97. **Expected a default case** (`JS-0047`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 835-854
+    ```javascript
+    if (this.streamWatchConnection.has(StreamKey.userId) && this.channel.id == StreamKey.channelId) {
+                  const streamConnection = this.streamWatchConnection.get(StreamKey.userId);
+                  // Watch user stream
+                  switch (event) {
+                    case 'STREAM_CREATE': {
+                      streamConnection.setSessionId(this.authentication.sessionId);
+                      streamConnection.serverId = data.rtc_server_id;
+                      break;
+                    }
+                    case 'STREAM_SERVER_UPDATE': {
+                      streamConnection.setTokenAndEndpoint(data.token, data.endpoint);
+                      break;
+                    }
+                    case 'STREAM_DELETE': {
+                      streamConnection.disconnect();
+                      streamConnection.receiver.packets.destroyAllStream();
+                      break;
+                    }
+                    case 'STREAM_UPDATE': {
+                      streamConnection.update(data);
+                      break;
+                    }
+                  }
+                }
+              });
+            }
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+98. **Expected a default case** (`JS-0047`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 698-716
+    ```javascript
+    this.streamConnection
+                ) {
+                  // Current user stream
+                  switch (event) {
+                    case 'STREAM_CREATE': {
+                      this.streamConnection.setSessionId(this.authentication.sessionId);
+                      this.streamConnection.serverId = data.rtc_server_id;
+                      break;
+                    }
+                    case 'STREAM_SERVER_UPDATE': {
+                      this.streamConnection.setTokenAndEndpoint(data.token, data.endpoint);
+                      break;
+                    }
+                    case 'STREAM_DELETE': {
+                      this.streamConnection.disconnect();
+                      break;
+                    }
+                    case 'STREAM_UPDATE': {
+                      this.streamConnection.update(data);
+                      break;
+                    }
+                  }
+                }
+                if (this.streamWatchConnection.has(StreamKey.userId) && this.channel.id == StreamKey.channelId) {
+                  const streamConnection = this.streamWatchConnection.get(StreamKey.userId);
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+99. **Expected 'this' to be used by class method 'playAudio'** (`JS-0105`)
+    **File:** `src/client/voice/VoiceConnection.js`
+    **Line:** 668
+    ```javascript
+    }
+      }
+    
+      playAudio() {} // eslint-disable-line no-empty-function
+      playVideo() {} // eslint-disable-line no-empty-function
+    
+      /**
+    ```
+    **Category:** Anti-pattern
+    **Severity:** minor
+
+100. **Expected 'this' to be used by class method 'editMessage'** (`JS-0105`)
+     **File:** `src/client/WebhookClient.js`
+     **Line:** 51
+     ```javascript
+     sendSlackMessage() {}
+       fetchMessage() {}
+       edit() {}
+       editMessage() {}
+       delete() {}
+       deleteMessage() {}
+       get createdTimestamp() {}
+     ```
+     **Category:** Anti-pattern
+     **Severity:** minor
+
+*...and 299 more occurrences. [See full list on DeepSource](https://app.deepsource.com/gh/Neuvillette-dc/neuviii-discord.js-self/run/05527119-6f09-4b1b-bab3-2980f79b6e8d/).*
